@@ -18,6 +18,12 @@ ENV BUILD_PACKAGES \
   py-pip \
   py-yaml \
   ca-certificates
+
+ENV JUNOS_PACKAGES \
+  libxml2-dev \
+  libxslt-dev \
+  libssl-dev \
+  libffi-dev
  
 # If installing ansible@testing
 #RUN \
@@ -38,11 +44,15 @@ RUN set -x && \
     \
     echo "==> Adding Python runtime..."  && \
     apk add --no-cache ${BUILD_PACKAGES} && \
+    apk add --no-cache ${JUNOS_PACKAGES} && \
     pip install --upgrade pip && \
     pip install python-keyczar docker-py && \
     \
     echo "==> Installing Ansible..."  && \
     pip install ansible==${ANSIBLE_VERSION} && \
+    \
+    echo "==> Installing junos-eznc..." \
+    pip install junos-eznc \
     \
     echo "==> Cleaning up..."  && \
     apk del build-dependencies && \
