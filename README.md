@@ -6,7 +6,7 @@ Curtosy of [Marko](http://ruleoftech.com/2017/dockerizing-all-the-things-running
 `docker pull johnsondnz/ansible:latest`
 
 # Build your own
-`docker build -t {{username}}/{{image-0ame}} .`
+`docker build -t {{username}}/{{image-name}} .`
 
 # Pull and test images
 ```
