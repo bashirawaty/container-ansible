@@ -1,6 +1,6 @@
 # container-ansible
 Ansible run from a docker container
-Curtosy of [Marko](http://ruleoftech.com/2017/dockerizing-all-the-things-running-ansible-inside-docker-container) 
+Courtesy of [Marko](http://ruleoftech.com/2017/dockerizing-all-the-things-running-ansible-inside-docker-container) 
 
 # Install
 `docker pull johnsondnz/ansible:latest`
