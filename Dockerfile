@@ -18,12 +18,6 @@ ENV BUILD_PACKAGES \
   py-pip \
   py-yaml \
   ca-certificates
-
-ENV JUNOS_PACKAGES \
-  libxml2-dev \
-  libxslt-dev \
-  libssl-dev \
-  libffi-dev
  
 # If installing ansible@testing
 #RUN \
@@ -37,6 +31,9 @@ RUN set -x && \
       musl-dev \
       libffi-dev \
       openssl-dev \
+      libxslt-dev \
+      libxml2-dev \
+      libffi-dev \
       python-dev && \
     \
     echo "==> Upgrading apk and system..."  && \
@@ -44,15 +41,14 @@ RUN set -x && \
     \
     echo "==> Adding Python runtime..."  && \
     apk add --no-cache ${BUILD_PACKAGES} && \
-    apk add --no-cache ${JUNOS_PACKAGES} && \
     pip install --upgrade pip && \
     pip install python-keyczar docker-py && \
     \
     echo "==> Installing Ansible..."  && \
     pip install ansible==${ANSIBLE_VERSION} && \
     \
-    echo "==> Installing junos-eznc..." \
-    pip install junos-eznc \
+    echo "==> Installing ncclient and junos-eznc..." && \
+    pip install ncclient junos-eznc && \
     \
     echo "==> Cleaning up..."  && \
     apk del build-dependencies && \
@@ -61,7 +57,10 @@ RUN set -x && \
     echo "==> Adding hosts for convenience..."  && \
     mkdir -p /etc/ansible /ansible && \
     echo "[local]" >> /etc/ansible/hosts && \
-    echo "localhost" >> /etc/ansible/hosts
+    echo "localhost" >> /etc/ansible/hosts && \
+    \
+    echo "==> Installed python modules..." && \
+    pip list
  
 ENV ANSIBLE_GATHERING smart
 ENV ANSIBLE_HOST_KEY_CHECKING false
