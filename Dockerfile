@@ -1,5 +1,5 @@
 FROM alpine:latest
-ARG ANSIBLE_VERSION=2.8.3
+ARG ANSIBLE_VERSION
 
 LABEL maintainer="Donald Johnson <@johnsonnz>"
 
@@ -40,5 +40,6 @@ ENV PATH /ansible/bin:$PATH
 ENV ANSIBLE_LIBRARY /ansible/library
  
 WORKDIR /ansible/playbooks
- 
+COPY VERSION . 
+
 ENTRYPOINT ["ansible-playbook"]
