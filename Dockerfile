@@ -1,66 +1,34 @@
-FROM alpine:3.7
- 
-ENV ANSIBLE_VERSION 2.7.0
- 
-ENV BUILD_PACKAGES \
-  bash \
-  curl \
-  tar \
-  openssh-client \
-  sshpass \
-  git \
-  python \
-  py-boto \
-  py-dateutil \
-  py-httplib2 \
-  py-jinja2 \
-  py-paramiko \
-  py-pip \
-  py-yaml \
-  ca-certificates
- 
-# If installing ansible@testing
-#RUN \
-#	echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> #/etc/apk/repositories
- 
+FROM alpine:latest
+ARG ANSIBLE_VERSION=2.8.3
+
+LABEL maintainer="Donald Johnson <@johnsonnz>"
+
+COPY requirements.txt /tmp
+
 RUN set -x && \
-    \
-    echo "==> Adding build-dependencies..."  && \
-    apk --update add --virtual build-dependencies \
-      gcc \
-      musl-dev \
-      libffi-dev \
-      openssl-dev \
-      libxslt-dev \
-      libxml2-dev \
-      libffi-dev \
-      python-dev && \
-    \
-    echo "==> Upgrading apk and system..."  && \
-    apk update && apk upgrade && \
-    \
-    echo "==> Adding Python runtime..."  && \
-    apk add --no-cache ${BUILD_PACKAGES} && \
-    pip install --upgrade pip && \
-    pip install python-keyczar docker-py && \
-    \
-    echo "==> Installing Ansible..."  && \
-    pip install ansible==${ANSIBLE_VERSION} && \
-    \
-    echo "==> Installing ncclient and junos-eznc..." && \
-    pip install ncclient junos-eznc && \
-    \
-    echo "==> Cleaning up..."  && \
-    apk del build-dependencies && \
+    echo "==> Install dependencies" && \
+    apk add --no-cache --update python3 ca-certificates openssh-client sshpass dumb-init su-exec && \
+    echo "==> Install dev libraries" && \
+    apk add --no-cache --update --virtual .build-deps python3-dev build-base libffi-dev openssl-dev && \
+    echo "==> Update pip" && \
+    pip3 install --no-cache-dir --upgrade pip && \
+    echo "==> Install ansible" && \
+    pip3 install --no-cache-dir --upgrade setuptools ansible==${ANSIBLE_VERSION} && \
+    echo "==> Checking for requirements.txt with contents" && \
+    [ -s /tmp/requirements.txt ] && echo "==> Install more pip packages" && pip3 install --no-cache-dir -r /tmp/requirements.txt || echo "==> No additional packages to install" && \
+    echo "==> Cleanup" && \
+    apk del --no-cache --purge .build-deps && \
     rm -rf /var/cache/apk/* && \
+    rm -rf /root/.cache && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    rm /tmp/requirements.txt && \
     \
     echo "==> Adding hosts for convenience..."  && \
     mkdir -p /etc/ansible /ansible && \
     echo "[local]" >> /etc/ansible/hosts && \
-    echo "localhost" >> /etc/ansible/hosts && \
-    \
+    echo "localhost" >> /etc/ansible/host && \
     echo "==> Installed python modules..." && \
-    pip list
+    pip3 list
  
 ENV ANSIBLE_GATHERING smart
 ENV ANSIBLE_HOST_KEY_CHECKING false
