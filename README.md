@@ -3,6 +3,7 @@ Ansible run from a docker container
 Courtesy of [Marko](http://ruleoftech.com/2017/dockerizing-all-the-things-running-ansible-inside-docker-container) 
 
 ## Changes
+* 31.07.2019 - Updated to ansible 2.8.3 and python3, and removed junos-eznc due to build errors.
 * 13.02.2019 - Updated to ansible 2.7.7.
 * 27.11.2018 - Added libxslt-dev, libxml2-dev, libffi-dev, nccclient, junos-eznc.
 * 26.11.2018 - First release.
