@@ -4,10 +4,18 @@ pipeline {
     registryCredential = "dockerhub"
     CI = "true"
     version = ""
-    dockerImage = ""
   }
-  agent any
+  agent any 
+  options {
+      skipDefaultCheckout(true)
+  }
   stages {
+    stage("Checkout SCM") {
+      steps {
+        echo "==> Checking out the source control..."
+        checkout scm
+      }
+    }
     stage("Versioning") {
       steps {
         script {
@@ -15,28 +23,46 @@ pipeline {
         }
       }
     }
-    stage("Building Image") {
+    stage("Check for docker daemon") {
       steps {
-        script {
-          sh "docker build -t $registry:latest --build-arg ANSIBLE_VERSION=$version -f Dockerfile ."
-        }
+        echo "==> Checking for docker service..."
+        sh "docker --version"
       }
     }
-    stage("Deploying Docker Image") {
+    stage("Build Image") {
       steps {
+        echo "==> Building container with Ansible=${version}..."
+        sh "docker build -t ${registry}:latest . --build-arg ANSIBLE_VERSION=${version}"
+      }
+    }
+    stage("Test Image") {
+      steps {
+        echo "==> Testing the new image with ansible-playbook --version..."
+        sh "docker run --rm ${registry}:${version}"
+      }
+    }
+    stage("Publish images") {
+      steps {
+        echo "==> Publishing images to DockerHub..."
         script {
           docker.withRegistry( '', registryCredential ) {
-            sh "docker push $registry:latest"
-            sh "docker push $registry:$version"
+            sh "docker push ${registry}:latest"
+            sh "docker push ${registry}:${version}"
           }
         }
       }
     }
-    stage("Removing Images") {
+    stage("Remove image") {
       steps {
-        sh "docker rmi $registry:latest"
+        echo "==> Removing images..."
+        sh "docker rmi ${registry}:latest"
+      }
+    }
+    stage("Clean system") {
+      steps {
+        echo "==> Cleaning system..."
+        sh "docker system prune --volumes --force"
       }
     }
   }
 }
-

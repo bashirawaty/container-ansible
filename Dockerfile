@@ -40,6 +40,7 @@ ENV PATH /ansible/bin:$PATH
 ENV ANSIBLE_LIBRARY /ansible/library
  
 WORKDIR /ansible/playbooks
-COPY VERSION . 
+COPY VERSION .
+COPY entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT ["ansible-playbook"]
+ENTRYPOINT ["/entrypoint.sh"]
