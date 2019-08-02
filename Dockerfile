@@ -30,7 +30,7 @@ RUN set -x && \
     echo "==> Installed python modules..." && \
     pip3 list
  
-ENV ANSIBLE_GATHERING smart
+#ENV ANSIBLE_GATHERING smart
 ENV ANSIBLE_HOST_KEY_CHECKING false
 ENV ANSIBLE_RETRY_FILES_ENABLED false
 ENV ANSIBLE_ROLES_PATH /ansible/playbooks/roles
