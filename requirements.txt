@@ -1,2 +1,4 @@
 ansible-lint
 paramiko
+netaddr
+junos-eznc

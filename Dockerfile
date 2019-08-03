@@ -7,7 +7,7 @@ COPY requirements.txt /tmp
 
 RUN set -x && \
     echo "==> Install dependencies" && \
-    apk add --no-cache --update python3 ca-certificates openssh-client sshpass dumb-init su-exec && \
+    apk add --no-cache --update python3 ca-certificates openssh-client sshpass dumb-init su-exec py3-lxml && \
     echo "==> Install dev libraries" && \
     apk add --no-cache --update --virtual .build-deps python3-dev build-base libffi-dev openssl-dev && \
     echo "==> Update pip" && \
