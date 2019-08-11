@@ -56,6 +56,7 @@ pipeline {
       steps {
         echo "==> Removing images..."
         sh "docker rmi ${registry}:latest"
+        sh "docker rmi ${registry}:${version}"
       }
     }
     stage("Clean system") {
