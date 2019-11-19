@@ -1,6 +1,6 @@
-# PROJECT MOVED TO GILAB.COM
-https://gitlab.com/johnsondnz/container-ansible
-This project will be archived.
+# PROJECT MOVED TO GITLAB.COM
+- https://gitlab.com/johnsondnz/container-ansible
+- This project has been archived.
 
 # container-ansible
 - Ansible run from a docker container
