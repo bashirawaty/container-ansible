@@ -1,3 +1,7 @@
+# PROJECT MOVED TO GILAB.COM
+https://gitlab.com/johnsondnz/container-ansible
+This project will be archived.
+
 # container-ansible
 - Ansible run from a docker container
 - Jenkins automated builds based on github push requests
